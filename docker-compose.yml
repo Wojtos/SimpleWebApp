@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  php:
+    build: .
+    ports:
+      - 8000:80
+    volumes:
+      - .:/var/www:rw
+    links:
+      - db
+  db:
+    image: mysql:8.0
+    ports:
+      - 33306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: simple_web_app
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+      - ./conf:/etc/mysql/conf.d
+      - db_volume:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    ports:
+      - 8002:80
+    environment:
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+volumes:
+  db_volume:

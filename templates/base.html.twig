@@ -1,19 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+    {% block stylesheets %}
+        {#{{ encore_entry_link_tags('app') }}#}
+    {% endblock %}
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block javascripts %}
+        <script>
+            const UPLOAD_FORM_PATH = '{{ url('app_send_form') }}';
+        </script>
+        <script async src="{{ asset('js/app.js') }}"></script>
+    {% endblock %}
+</head>
+<body>
+{% if app.user %}
+    <div class="mb-3">
+        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        <a href="{{ path('app_profiles') }}">Profiles</a>
+{% else %}
+    <div class="mb-3">
+        <a href="{{ path('app_login') }}">Sign in</a>
+        <a href="{{ path('app_register') }}">Sign up</a>
+{% endif %}
+        <a href="{{ path('app_display_form') }}">Profile form</a>
+    </div>
+{% block body %}{% endblock %}
+</body>
 </html>
